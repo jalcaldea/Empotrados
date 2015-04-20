@@ -5,19 +5,24 @@
 
 class Board{
 	private:
-		int[25] Board;
-		int limitX=0;
-		int limitY=0;
+		int Board[25];
+		int limit[4];
 	public:
 		Board ();
 		void set(int pos, player);
 		void remove (int pos);
+		int move (int oldPos, int newPos)
 		int getPlayer (int pos);
-		int getPositions (int player);
+		int[] getPositions (int player);
 		void clearBoard ();
 		void setLimits();
 		bool blocked (int pos);
+		int[4] Board::getLimits();
 		Board copyBoard ();
+		int[2] parseMask (int[25] mk);
+		int newPosition (int pos, int mov);
+		int[] actualize (int[25] mk);
+		//int movement (int pos1, pos2);
 }
 
 #endif

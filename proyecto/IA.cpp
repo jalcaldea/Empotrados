@@ -31,38 +31,19 @@ class IA{
 			//Por cada movimiento
 			for (int j=0; j<4; j++){
 				if (posibleMov(t,i,j)){
-					int beneficio2 = this.beneficio(t, i, j);
+					int beneficio2 = this.beneficio(t, i, j, jugador);
 					if (beneficio<beneficio2 || pos1 = -1){
 						beneficio = beneficio2;
 						pos1 = i;
-						pos2 = mueve(i,j);
+						pos2 = t.newPosition(i,j);
 					}
 				}
 			}
 		}
+		return {pos1, pos2};
 	}
 	
 	private:
-	
-	//Devuelve la nueva posición de una ficha tras ser movida
-	int mueve (int pos, int mov){
-		int toReturn = -1;
-		switch (mov){
-			case 0:
-				toReturn = pos-5;
-				break;
-			case 1:
-				toReturn = pos+1;
-				break;
-			case 2: 
-				toReturn = pos+5;
-				break;
-			case 3:
-				toReturn = pos-1;
-				break;
-		}
-		return toReturn;
-	}
 	
 	//Devuelve true si es posible hacer un movimiento y false en caso contrario
 	bool posibleMov (Board t, int pos, int mov){
@@ -82,8 +63,30 @@ class IA{
 		}
 	}
 	
-	//Devuelve el beneficio de un movimiento
-	int beneficio (Board t, int pos, int mov){
+	//Devuelve el beneficio de un movimiento.
+	//Si en ese movimiento se pierde, el beneficio es -30
+	int beneficio (Board t, int pos, int mov, int jugador){
+		int toReturn = 0;
+		int newPos = t.newPosition(pos, mov);
+		if(newPos == -1){
+			return newPos;
+		}else{
+			Board aux = copyBoard(t);
+			aux.move(pos, newPos);
+			for(int i=0; i<25; i++){
+				if(aux.getPlayer(i)==jugador && aux.blocked(i)){
+					toReturn-=1;
+					t.remove(i);
+				}else if(aux.getPlayer(i)!=1 && aux.getPlayer(i)!=0 && aux.blocked(i)){
+					toReturn+=1;
+					t.remove(i);
+				}
+			}
+			if(t.getPositions(jugador).lenght==0){
+				toReturn = -30;
+			}
+		}
+		return toReturn;
 		
 	}
 }
