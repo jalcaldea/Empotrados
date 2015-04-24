@@ -12,16 +12,16 @@ Board::Board (){
 	 limit = {1, 5, 6, 10}
 }
 
-void Board::set(int pos, player){
+void Board::set(byte pos, player){
 	board[pos] = player;
 }
 
-void Board::remove (int pos){
+void Board::remove (byte pos){
 	board[pos] = 0;
 }
 
 //Devuelve -1 si el movimiento no es válido
-int Board::move (int oldPos, int newPos){
+byte Board::move (byte oldPos, byte newPos){
 	if(board[oldPos]==9 || board[oldPos]==0 || board[newPos]!==0){
 		return -1;
 	}else{
@@ -30,15 +30,15 @@ int Board::move (int oldPos, int newPos){
 	}
 }
 
-int Board::getPlayer (int pos){
+byte Board::getPlayer (byte pos){
 	return board[pos];
 }
 
-int[] Board::getPositions (int player){
-	int count = 0;
-	int toReturn [];
+byte[] Board::getPositions (byte player){
+	byte count = 0;
+	byte toReturn [];
 	
-	for (int x=0; x<25; x++){
+	for (byte x=0; x<25; x++){
 		if (board[x] == player){
 			toReturn[count] = x;
 			count++;
@@ -56,24 +56,24 @@ void Board::clearBoard (){
 			 0,0,0,0,0};
 }
 
-bool Board::blocked (int p){
+bool Board::blocked (byte p){
 	return ((p<5 || p-5!=0 || p-5==9) && (p>19 || p+5!=0 || p+5==9) && (p%5=0 || p-1!=0 || p-1==9) && (p%5=4 || p+1!=0 || p+1==9))
 }
 
 void Board::setLimits(){
-	int count = 1;
+	byte count = 1;
 	bool found = false;
 	
 	//Filas desde arriba
 	while(!found){
 			
-		int ini = count*5;
-		for(int i=ini; i<ini+5 && !found; i++){
+		byte ini = count*5;
+		for(byte i=ini; i<ini+5 && !found; i++){
 			found = (board[i] != 0 && board[i] != 9);
 		}
 		if(!found){
 			count++;
-			for(int i=ini; i<ini+5 && !found; i++){
+			for(byte i=ini; i<ini+5 && !found; i++){
 				board[i] = 9;
 			}
 		}
@@ -86,13 +86,13 @@ void Board::setLimits(){
 	while(!found){
 		count--;
 		
-		int ini = count*5;
-		for(int i=ini; i<ini+5 && !found; i++){
+		byte ini = count*5;
+		for(byte i=ini; i<ini+5 && !found; i++){
 			found = (board[i] != 0 && board[i] != 9);
 		}
 		if(!found){
 			
-			for(int i=ini; i<ini+5 && !found; i++){
+			for(byte i=ini; i<ini+5 && !found; i++){
 				board[i] = 9;
 			}
 		}
@@ -104,13 +104,13 @@ void Board::setLimits(){
 	//Columnas desde izda
 	while(!found){
 			
-		int ini = count-1;
-		for(int i=ini; i<ini+20 && !found; i+=5){
+		byte ini = count-1;
+		for(byte i=ini; i<ini+20 && !found; i+=5){
 			found = (board[i] != 0 && board[i] != 9);
 		}
 		if(!found){
 			count++;
-			for(int i=ini; i<ini+20 && !found; i+=5){
+			for(byte i=ini; i<ini+20 && !found; i+=5){
 				board[i] = 9;
 			}
 		}
@@ -123,13 +123,13 @@ void Board::setLimits(){
 	while(!found){
 		count--;
 		
-		int ini = count-1;
-		for(int i=ini; i<ini+20 && !found; i+=5){
+		byte ini = count-1;
+		for(byte i=ini; i<ini+20 && !found; i+=5){
 			found = (board[i] != 0 && board[i] != 9);
 		}
 		if(!found){
 			
-			for(int i=ini; i<ini+20 && !found; i+=5){
+			for(byte i=ini; i<ini+20 && !found; i+=5){
 				board[i] = 9;
 			}
 		}
@@ -138,13 +138,13 @@ void Board::setLimits(){
 	
 }
 
-int[4] Board::getLimits(){
+byte[4] Board::getLimits(){
 	return limit;
 }
 
 Board Board::copyBoard (){
 	Board toReturn = new Board();
-	for (int i=0; i<25; i++){
+	for (byte i=0; i<25; i++){
 		toReturn.set(i, board[i]);
 	}
 	
@@ -153,13 +153,13 @@ Board Board::copyBoard (){
 
 //Devuelve la posición inicial y final dada una máscara.
 //En caso de movimiento no válido devuelve -1 en ambas
-int[2] Board::parseMask (int[25] mk){
+byte[2] Board::parseMask (bool[25] mk){
 	/*Si viene en forma de byte añadir este bucle:
-	Tan solo transforma un byte a un int[]
+	Tan solo transforma un byte a un byte[]
 	
-	int[25] mk;
-	int byte; 
-	int counter = 0;
+	byte[25] mk;
+	byte byte; 
+	byte counter = 0;
  
 	for(t=128; t>0; t = t/2){
 		if(byte & t) mk[counter]=1; 
@@ -169,10 +169,10 @@ int[2] Board::parseMask (int[25] mk){
 	*/
 	
 	bool err = false;
-	int pos1 = -1;
-	int pos2 = -1;
-	for (int i=0; i<25 && !err; i++){
-		if(mk[i]!=0){
+	byte pos1 = -1;
+	byte pos2 = -1;
+	for (byte i=0; i<25 && !err; i++){
+		if(mk[i]){
 			if(board[i]==9){
 				err = true;
 			}else if(board[i]==0){
@@ -191,23 +191,23 @@ int[2] Board::parseMask (int[25] mk){
 		}
 	}
 	if (pos1==-1 || pos2==-1){
-		int toReturn[2] = {-1, -1};
+		byte toReturn[2] = {-1, -1};
 		return toReturn;
 	}else{
-		int toReturn[2] = {pos1, pos2};
+		byte toReturn[2] = {pos1, pos2};
 		return toReturn;
 	}
 }
 
 //Devuelve la nueva posición si efectuas un movimiento. 
 //En caso de no ser válido devuelve -1
-int Board::newPosition (int pos, int mov){
+byte Board::newPosition (byte pos, byte mov){
 	if((board[pos]==0) || (board[pos]==9) ||
 	 (mov==0 && pos<5) || (mov==1 && pos%5==4) || 
 	 (mov==2 && pos>19) || (mov==3 && pos%5==0)){
 	   return -1;
    }else{
-	   int np = -1;
+	   byte np = -1;
 	   switch (mov){
 		case 0:
 			np = pos-5;
@@ -235,19 +235,19 @@ int Board::newPosition (int pos, int mov){
 }
 
 //Realiza un movimiento y actualiza el tablero. Devuelve las fichas comidas
-int[] Board::actualize (int[25] mk){
+byte[] Board::actualize (bool[25] mk){
 	
 	//Realiza el movimiento
-	int[2] poss = parseMask(mk);
+	byte[2] poss = parseMask(mk);
 	move(poss[0], poss[1]);
 	
 	//Comprueba los límites
 	board.setLimits();
 	
 	//Analiza las comidas
-	int counter = 0;
-	int toReturn[];
-	for(int i=0; i<25; i++){
+	byte counter = 0;
+	byte toReturn[];
+	for(byte i=0; i<25; i++){
 		if(aux.getPlayer(i)!=9 && aux.getPlayer(i)!=0){
 			toReturn[counter]=aux.getPlayer(i);
 			counter++;
