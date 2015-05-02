@@ -19,7 +19,7 @@
 #include <Board.h>
 #include <IA.h>
 
-byte player = 2;
+byte player = 0;
 
 byte mask_int[4] = {0,0,0,0};
 bool mask[25] = {};
@@ -72,7 +72,7 @@ void leerTablero(byte jug){
             if(((pos % 5) != 0)&& board.getPlayer(pos-1)==0){
               turnOn(pos-1);
             }
-          }else{
+          }else if(board.getPlayer(pos)==0){
             
            for(byte k=0;k<10;k++){
              toggle(pos);
